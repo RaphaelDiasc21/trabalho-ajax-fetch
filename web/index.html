@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <label>Id do usuário</label>
+    <input type="text" name="userId" id="userId" />
+    <button onclick="getData()">Buscar</button>
+    
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Valor</th>
+        </tr>
+        <tr id="responseInfo">
+
+        </tr>
+
+    </table>
+
+
+    <script>
+        getData = () => {
+            let userId = document.getElementById("userId").value
+            console.log(userId)
+
+            fetch("http://localhost:8080/user/" + userId).then(resp => {
+            let user = resp.json()
+            user.then(userResponse => {
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        const elementTagUser = document.createElement("th")
+                        elementTagUser.innerHTML = userResponse["name"]
+
+            
+                        let amountJson = JSON.parse(xhttp.responseText)
+
+                        const elementTagAmount = document.createElement("th")
+                        elementTagAmount.innerHTML = amountJson["amount"]
+
+                        document.getElementById("responseInfo").appendChild(elementTagUser)
+                        document.getElementById("responseInfo").appendChild(elementTagAmount)
+                    }
+                };
+                xhttp.open("GET","http://localhost:8001/payment/" + userId, true);
+                xhttp.send();
+
+            })
+        })
+        }
+    </script>
+</body>
+</html>
